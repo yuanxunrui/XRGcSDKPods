@@ -1,0 +1,6 @@
+use_frameworks!
+target 'XRGcSDKPods_Tests' do
+  pod 'XRGcSDKPods', :path => '../'
+  
+  
+end
