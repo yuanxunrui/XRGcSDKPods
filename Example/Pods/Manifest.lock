@@ -1,0 +1,16 @@
+PODS:
+  - XRGcSDKPods (0.1.0)
+
+DEPENDENCIES:
+  - XRGcSDKPods (from `../`)
+
+EXTERNAL SOURCES:
+  XRGcSDKPods:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  XRGcSDKPods: 236bed40cf0caaa021eae0b94301a7db0df97ff8
+
+PODFILE CHECKSUM: 8c48d62244771dd5ae0b224ae863240acdc8f553
+
+COCOAPODS: 1.5.3

@@ -1,0 +1,22 @@
+{
+  "name": "XRGcSDKPods",
+  "version": "0.1.0",
+  "summary": "A short description of XRGcSDKPods.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/yuanxunrui/XRGcSDKPods",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "yuanxunrui": "yxruisoft@sina.com"
+  },
+  "source": {
+    "git": "https://github.com/yuanxunrui/XRGcSDKPods.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "XRGcSDKPods/Classes/**/*"
+}

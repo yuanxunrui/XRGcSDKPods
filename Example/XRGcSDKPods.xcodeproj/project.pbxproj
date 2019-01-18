@@ -27,10 +27,10 @@
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
-		6A7DE5D84DF3CE917E4E2C92 /* XRGcSDKPods.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = XRGcSDKPods.podspec; path = ../XRGcSDKPods.podspec; sourceTree = "<group>"; };
-		B6ED29465FF0ED7955D240A3 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		6A7DE5D84DF3CE917E4E2C92 /* XRGcSDKPods.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = XRGcSDKPods.podspec; path = ../XRGcSDKPods.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		B6ED29465FF0ED7955D240A3 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C78EF75169EC63E74AE6C0DF /* Pods_XRGcSDKPods_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XRGcSDKPods_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E51BEEF8515A3927A1F2FDEC /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		E51BEEF8515A3927A1F2FDEC /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

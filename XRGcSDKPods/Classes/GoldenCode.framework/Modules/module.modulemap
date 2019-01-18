@@ -1,0 +1,6 @@
+framework module GoldenCode {
+  umbrella header "GoldenCode.h"
+
+  export *
+  module * { export * }
+}

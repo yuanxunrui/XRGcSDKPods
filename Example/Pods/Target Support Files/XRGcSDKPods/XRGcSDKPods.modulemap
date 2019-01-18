@@ -1,0 +1,6 @@
+framework module XRGcSDKPods {
+  umbrella header "XRGcSDKPods-umbrella.h"
+
+  export *
+  module * { export * }
+}
