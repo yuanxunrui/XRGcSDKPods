@@ -13,6 +13,11 @@
 
 @class XRUserInfo,XRUpSignInfo,XRResults;
 
+typedef NS_ENUM(NSInteger,Gc_Sdk_Register_Type) {
+    Gc_Sdk_register_type_tel = 0,   //手机号
+    Gc_Sdk_register_type_zfb = 1,   //支付宝
+    Gc_Sdk_register_type_wx = 2     //微信
+};
 //待签名数据回调
 typedef void (^Gc_Sdk_SignBody_Block)(NSString *resultCode,NSString *resultMsg,NSString *plain_data_json,NSString *plain_data);
 
@@ -20,34 +25,13 @@ typedef void (^Gc_Sdk_SignBody_Block)(NSString *resultCode,NSString *resultMsg,N
 typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
 
 @interface XRRidingCodeSDK : NSObject
-#pragma mark 初始化
+#pragma mark - 初始化
 
 /**
  @brief SDK实例化
  */
 + (XRRidingCodeSDK *)shareSDK;
 
-/**
- @brief 清空签名信息
- 
- 注：执行此操作后SDK内部与发卡机构签名相关缓存会被清空，
-    开发者有需要需重新请求发卡机构签名
- */
-- (BOOL)clearCacheSignInfo;
-
-/**
- @brief 切换SDK账户
- 
- 注：在App账户切换时调用，调用此api后SDK内部缓存数据会清空，
-    届时开发者再想生码需要重新走生码流程
- */
-- (BOOL)switchUser;
-
-
-/**
- @brief 获取当前版本号*/
-- (NSString *)getCurrentVersion;
-#pragma mark 登陆/注册SDK
 
 /**
  @brief 基本信息注册
@@ -56,20 +40,23 @@ typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
  @param sdk_pk 发码平台公钥
  
  注：1、需在SDK注册之前调用，否则可能会出现部分API不灵敏
-    2、在 didFinishLaunchingWithOptions 中调用
+ 2、在 didFinishLaunchingWithOptions 中调用
  */
 - (BOOL)setAppKey:(NSString *)appKey
      sdkPublicKey:(NSString *)sdk_pk;
-
+    
 /**
  @brief 设置发卡机构代码
  
  @param orgCode 发卡机构代码
  @return bol
  注：集成过程中如果存在更改/配置机构服务代码情况，则调用此API，
-    调用此API后，SDK会自动抹除生码相关缓存信息，开发者需重新进行用户公私钥及发卡机构签名的更新操作
+ 调用此API后，SDK会自动抹除生码相关缓存信息，开发者需重新进行用户公私钥及发卡机构签名的更新操作
  */
 - (BOOL)setOrgCode:(NSString *)orgCode;
+
+
+#pragma mark - 登陆/注册SDK
 
 /**
  @brief 获取 注册SDK待签名数据
@@ -88,7 +75,37 @@ typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
                   signData:(NSString *)plain_data
            completionBlock:(Gc_Sdk_Result_Block)block;
 
-#pragma mark 签名
+#pragma mark - 登陆/注册SDK -- V2
+/**
+ 同样是登陆注册API，也是过渡API
+ 会慢慢取代registerGoldenCodeSignBodyData和registerGoldenCode方法
+ 变动日志：用户需多上传‘sdk注册类型’、‘sdk注册类型详情’信息*/
+    
+/**
+ @brief 获取 注册SDK待签名数据-V2
+ 
+ @param userId  用户ID
+ @param type  app用户注册类型：0-手机号 1-支付宝 2-微信
+ @param userInfo  根据type类型传不同的值 0-手机号 1-支付宝账号 2-微信返回openId
+ 
+ **说明：userInfo的值是依据type来的，后端会依据type对userInfo进行解析
+ */
+- (void)registerGoldenCodeSignBodyData_V2:(NSString *)userId
+                                 userType:(Gc_Sdk_Register_Type)type
+                                 userInfo:(NSString *)userInfo
+                                signBlock:(Gc_Sdk_SignBody_Block)signBlock;
+    
+/**
+ @brief 注册SDK-V2
+ @param plain_data_json 带签名数据包（可通过registerGoldenCodeSignBodyData直接获取）
+ @param plain_data 签名数据
+ @param block 结果回调
+ */
+- (void)registerGoldenCode_V2:(NSString *)plain_data_json
+                     signData:(NSString *)plain_data
+              completionBlock:(Gc_Sdk_Result_Block)block;
+    
+#pragma mark - 签名
 /**
  @brief 模拟appServer签名，用于集成方前期服务端未集成签名架包时做模拟签名用，
     内部加密钥匙随时可能变换，变换则该签名方法立即作废，测试时需与开发人员联系
@@ -100,7 +117,7 @@ typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
          app_pa:(NSString *)app_pa
       signBlock:(void(^)(id result,BOOL isSignOK,NSString *msg))signBlock;
 
-#pragma mark 实名制
+#pragma mark - 实名制
 /**
  @brief 实名制  获取待签名数据*/
 - (void)realNameSignBodyData:(XRRealNameInfo *)info
@@ -118,7 +135,7 @@ typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
             signData:(NSString *)plain_data
      completionBlock:(Gc_Sdk_Result_Block)block;
 
-#pragma mark 实名制查询
+#pragma mark - 实名制查询
 /**
  @brief 获取待签名数据
  @param userId 用户唯一识别ID*/
@@ -135,7 +152,7 @@ typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
 
 
 
-#pragma mark 用户密钥信息
+#pragma mark - 用户密钥信息
 /**
  @brief 获取 用户密钥待签名数据*/
 - (void)updateKeySignBodyData:(NSString *)userId
@@ -159,14 +176,28 @@ typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
  */
 - (void)updateLocalKeyBlock:(void(^)(NSString *resultCode,NSString *resultMsg,id body))block;
 
-#pragma mark 发卡机构签名信息
+#pragma mark - 发卡机构签名信息
 
 /**
- @brief 获取 发卡方信息待签名数据*/
+ @brief 获取 发卡方信息待签名数据
+ 
+ @param judge ： 开关 YES-进行逻辑判断 NO-不进行逻辑判断
+ 
+ 说明：对一些限制生码条件进行判断，比如余额不足禁止生码等
+ */
 - (void)updateCardIssuerSignBodyData:(XRUpSignInfo *)signInfo
+                               judge:(BOOL)judge
                            signBlock:(Gc_Sdk_SignBody_Block)signBlock;
 
 
+/**
+ @brief 获取 发卡方信息待签名数据
+ 
+ 说明：该方法与上一方法区别：该方法内部不会对一些限制生码条件进行判断，比如余额不足禁止生码等*/
+- (void)updateCardIssuerSignBodyDataNotJudge:(XRUpSignInfo *)signInfo
+                                   signBlock:(Gc_Sdk_SignBody_Block)signBlock;
+    
+    
 /**
  @brief 更新 发卡方信息
  必要条件：获取密钥成功*/
@@ -174,7 +205,7 @@ typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
                     signData:(NSString *)plain_data
              completionBlock:(Gc_Sdk_Result_Block)block;
 
-#pragma mark 脱机生码
+#pragma mark - 脱机生码
 /**
  @brief 脱机生码
 
@@ -190,7 +221,7 @@ typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
             imageWidth:(CGFloat)width
        completionBlock:(Gc_Sdk_Result_Block)block;
 
-#pragma mark 脱机生码（含自定义域）
+#pragma mark - 脱机生码（含自定义域）
 /**
  @brief 脱机生码（含自定义域）
  
@@ -207,7 +238,7 @@ typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
          completionBlock:(Gc_Sdk_Result_Block)block;
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-#pragma mark 联机生码（单码）
+#pragma mark - 联机生码（单码）
 
 /**
  @brief 获取联机生码（单码）待签名数据
@@ -221,6 +252,8 @@ typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
                           appKey:(NSString *)appKey
                          orgCode:(NSString *)orgCode
                        signBlock:(Gc_Sdk_SignBody_Block)block;
+    
+    
 /**
  @brief 联机生码（单码）
  
@@ -233,7 +266,31 @@ typedef void (^Gc_Sdk_Result_Block)(XRResults *results);
                     signData:(NSString *)plain_data
                        width:(CGFloat)width
              completionBlock:(Gc_Sdk_Result_Block)block;
-#pragma mark 其他
+    
+   
+#pragma mark - SDK缓存管理
+/**
+ @brief 清空签名信息
+ 
+ 注：执行此操作后SDK内部与发卡机构签名相关缓存会被清空，
+ 开发者有需要需重新请求发卡机构签名
+ */
+- (BOOL)clearCacheSignInfo;
+    
+/**
+ @brief 切换SDK账户
+ 
+ 注：在App账户切换时调用，调用此api后SDK内部缓存数据会清空，
+ 届时开发者再想生码需要重新走生码流程
+ */
+- (BOOL)switchUser;
+    
+#pragma mark - 其他
+    
+    
+/**
+ @brief 获取当前版本号*/
+- (NSDictionary *)getCurrentVersion;
 
 /**
  @brief 是否打开Debug日志

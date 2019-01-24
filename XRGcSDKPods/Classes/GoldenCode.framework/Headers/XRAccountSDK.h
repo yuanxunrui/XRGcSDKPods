@@ -231,6 +231,55 @@ typedef void (^Gc_Sdk_Account_CompletionBlock)(NSString *resultCode,NSString *re
              completionBlock:(Gc_Sdk_Account_CompletionBlock)block;
 
 
+#pragma mark - 营销券
+/**
+ @brief 营销券支付-支付宝
+ 
+ @param userId 用户id
+ @param orgCode 发码机构代码
+ @param tranAmt 金额（元）
+ @param orderNo 订单号（app服务端提供）
+ */
+- (void)alipayCouponWithUserId:(NSString *)userId
+                       orgCode:(NSString *)orgCode
+                       tranAmt:(NSString *)tranAmt
+                       orderNo:(NSString *)orderNo
+               completionBlock:(Gc_Sdk_Account_CompletionBlock)successBlock;
+
+
+/**
+ @brief 营销券支付-微信H5
+ 
+ @param userId 用户id
+ @param orgCode 发码机构代码
+ @param tranAmt 金额（元）
+ @param orderNo 订单号（app服务端提供）
+ */
+- (void)wechatH5CouponWithUserId:(NSString *)userId
+                         orgCode:(NSString *)orgCode
+                         tranAmt:(NSString *)tranAmt
+                         orderNo:(NSString *)orderNo
+                 completionBlock:(Gc_Sdk_Account_CompletionBlock)successBlock;
+
+
+/**
+ @brief 营销券支付-招行
+ 
+ @param userId 用户id
+ @param orgCode 发码机构代码
+ @param tranAmt 金额（元）
+ @param orderNo 订单号（app服务端提供）
+ @param zsEnvFlg 是否存在招行环境 1: 存在  0:不存在
+ @param returnUrl 回调地址
+ */
+- (void)zspageCouponWithUserId:(NSString *)userId
+                       orgCode:(NSString *)orgCode
+                       tranAmt:(NSString *)tranAmt
+                       orderNo:(NSString *)orderNo
+                      zsEnvFlg:(int)zsEnvFlg
+                     returnUrl:(NSString *)returnUrl
+               completionBlock:(Gc_Sdk_Account_CompletionBlock)successBlock;
+
 #pragma mark - 支付宝
 /**
  @brief 充值 余额（支付宝）
@@ -331,18 +380,17 @@ __attribute__((unavailable("该方法暂不可用")));
  @param userId 用户ID
  @param orgCode 发卡机构代码
  @param tranAmt 金额（元）
- @param refer 此处暂固定传：@"zj-unicode.com"
- @param navigationController 当前导航栏控制器
- @param returnUrl 成功后回调url（需开发人员自行捕捉，下文说明），最好不为空（为空的话捕捉不到url，微信H5支付成功后会留在微信，返回不了商户），需配置固定scheme：“zj-unicode.com”，
-在application:openURL:options:方法中可以通过url.host判断并设置跳转逻辑
+ 
+ 注意事项：
+ >>开发者在调用成功该API后需在自定义的web页面手动配置
+ 1、refer 此处暂固定传：@"zj-unicode.com"
+ 2、returnUrl 成功后回调url（需开发人员自行捕捉，下文说明），最好不为空（为空的话捕捉不到url，微信H5支付成功后会留在微信，返回不了商户），需配置固定scheme：“zj-unicode.com”
+ 3、在application:openURL:options:方法中可以通过url.host判断并设置跳转逻辑
  例：returnUrl传入“XXXX”，支付成功后application:openURL:options：方法的url.host可以获取到"XXXX"
   */
 - (void)wechatRechargeH5WithUserId:(NSString *)userId
                            orgCode:(NSString *)orgCode
                            tranAmt:(NSString *)tranAmt
-                             refer:(NSString *)refer
-              navigationController:(UINavigationController *)navigationController
-                         returnUrl:(NSString *)returnUrl
                    completionBlock:(Gc_Sdk_Account_CompletionBlock)block;
 
 
@@ -351,15 +399,12 @@ __attribute__((unavailable("该方法暂不可用")));
 
  @param userId 用户ID
  @param transNo 失败订单编号
- @param navigationController 当前导航栏控制器
- @param returnUrl 成功后回调scheme，最好不为空，不需要在info中配置，
- 在application:openURL:options:方法中可以通过url.host判断并设置跳转逻辑
+ 
+ 1、returnUrl 成功后回调scheme，最好不为空，不需要在info中配置
+ 2、在application:openURL:options:方法中可以通过url.host判断并设置跳转逻辑
  */
 - (void)wechatPagePayH5WithUserId:(NSString *)userId
                           transNo:(NSString *)transNo
-                            refer:(NSString *)refer
-             navigationController:(UINavigationController *)navigationController
-                        returnUrl:(NSString *)returnUrl
                   completionBlock:(Gc_Sdk_Account_CompletionBlock)block;
 
 
@@ -368,15 +413,14 @@ __attribute__((unavailable("该方法暂不可用")));
 
  @param userId 用户APP唯一识别ID
  @param orgCode 发卡机构代码
- @param refer 请求微信H5签约URL配置参数，域名格式，值由金码平台配置并下发，eg：zj-unicode.com
- @param navigationController 当前操作控制器（必须为navigationController格式）
  @param block 回调
+ 
+ 1、refer 请求微信H5签约URL配置参数，域名格式，值由金码平台配置并下发，eg：zj-unicode.com
  */
 - (void)wechatAgentSignH5WithUserId:(NSString *)userId
                             orgCode:(NSString *)orgCode
-                              refer:(NSString *)refer
-               navigationController:(UINavigationController *)navigationController
                     completionBlock:(Gc_Sdk_Account_CompletionBlock)block;
+
 #pragma mark - 获取可提现渠道
 /**
  @brief 获取可提现渠道
